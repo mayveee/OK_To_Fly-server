@@ -9,6 +9,10 @@ const PORT = process.env.PORT || 3001;
 const API_KEY = process.env.GOOGLE_VISION_API_KEY;
 const itemData = require('./items');
 
+app.get('/', (req, res) => {
+    res.send('🟢 서버 작동 중');
+});
+
 app.post('/test-vision', async (req, res) => {
     try {
         const base64Image = req.body.image;
