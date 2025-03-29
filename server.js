@@ -9,17 +9,16 @@ const PORT = process.env.PORT || 3001;
 const API_KEY = process.env.GOOGLE_VISION_API_KEY;
 const itemData = require('./items');
 
-app.get('/test-vision', async (req, res) => {
+app.post('/test-vision', async (req, res) => {
     try {
-        const imagePath = './test3.jpg';
+        const base64Image = req.body.image;
+        if (!base64Image) {
+            return res.status(400).json({ error: '이미지 데이터가 없습니다.'});
+        }
         const forbiddenItems = itemData.forbiddenItems || [];
         const cautionItems = itemData.cautionItems || [];
         console.log("forbiddenItems:", itemData.forbiddenItems);
         console.log("cautionItems:", itemData.cautionItems);
-
-        // 파일 읽어서 base64 인코딩
-        const imageBuffer = fs.readFileSync(imagePath);
-        const base64Image = imageBuffer.toString('base64');
 
         // Vision API 요청
         const response = await axios.post(
@@ -43,29 +42,32 @@ app.get('/test-vision', async (req, res) => {
         // ✅ Object Localization 기반
         const localized = response.data.responses[0].localizedObjectAnnotations || [];
         const objectNames = localized.map(o => o.name.toLowerCase().trim());
-        // 데이터 통합
-        // const allKeywords = [...new Set([...labels, ...objectNames])];
-        // 라벨 처리하는 부분
+        // 라벨 처리하는 부분 
+        // 1은 label기반, 2는 localization 기반
         const detectedForbidden1 = labels.filter(label =>
             forbiddenItems.includes(label.toLowerCase())
         );  
         const detectedCaution1 = labels.filter(label =>
             cautionItems.includes(label.toLowerCase())
         );
-        //
         const detectedForbidden2 = objectNames.filter(label =>
             forbiddenItems.includes(label.toLowerCase())
         );  
         const detectedCaution2 = objectNames.filter(label =>
             cautionItems.includes(label.toLowerCase())
         );
-        //
         // 응답 생성 부분
-        let message = "✅ 반입 가능한 물품입니다.";
+        let message1 = "✅ 반입 가능한 물품입니다.";
         if (detectedForbidden1.length > 0) {
-            message = "❌ 반입 금지 물품이 포함되어 있습니다!";
+            message1 = "❌ 반입 금지 물품이 포함되어 있습니다!";
         } else if (detectedCaution1.length > 0) {
-            message = "⚠️ 주의가 필요한 물품이 포함되어 있습니다. (예: 액체류 100ml 이하)";
+            message1 = "⚠️ 주의가 필요한 물품이 포함되어 있습니다";
+        }
+        let message2 = "✅ 반입 가능한 물품입니다.";
+        if (detectedForbidden2.length > 0) {
+            message2 = "❌ 반입 금지 물품이 포함되어 있습니다!";
+        } else if (detectedCaution2.length > 0) {
+            message2 = "⚠️ 주의가 필요한 물품이 포함되어 있습니다";
         }
         res.json({
             labels,
@@ -74,7 +76,8 @@ app.get('/test-vision', async (req, res) => {
             cautionItems1: detectedCaution1,
             forbiddenItems2: detectedForbidden2,
             cautionItems2: detectedCaution2,
-            message
+            message1,
+            message2,
         });
     } catch (err) {
         console.error('❌ Vision API Error:', err.response?.data || err.message);
