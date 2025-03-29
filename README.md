@@ -4,14 +4,14 @@
 2. 서버에서 Google Visual API 호출
 3. 라벨 처리해서 클라이언트로 전송
 
-#### 스택
 
-| 분야             | 사용 기술                                     |
-|------------------|-----------------------------------------------|
-| **앱 프레임워크** | React Native                                  |
-| **런타임 환경**   | Expo                                           |
-| **언어**          | JavaScript                                     |
-| **라우팅**        | expo-router (Tabs 기반)                      |
-| **이미지 처리**   | expo-image-picker (갤러리, 카메라)            |
-| **API 통신**      | Axios (`POST` 방식, base64 이미지 전송)        |
-| **기기 테스트**   | 실기기(USB or QR 코드) 테스트                 |
+## 스택
+
+| 분야               | 사용 기술 및 설명                                                |
+|--------------------|------------------------------------------------------------------|
+| **프레임워크**      | Express.js (Node.js 기반 웹 서버 프레임워크)                    |
+| **서버 호스팅**     | Render (무료 배포, 자동 CI/CD, HTTPS 지원)                     |
+| **언어**            | JavaScript (Node.js)                                            |
+| **API 통신**        | Axios (서버 내부에서 Google Vision API 호출)                  |
+| **이미지 분석**     | Google Cloud Vision API (Label Detection + Object Detection)   |
+| **라우팅**          | `/test-vision` POST, `/` GET (헬스 체크용)                      |
