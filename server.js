@@ -4,7 +4,6 @@ const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
-app.use(express.json());
 app.use(express.json({ limit: '10mb' }));
 const PORT = process.env.PORT || 3001;
 const API_KEY = process.env.GOOGLE_VISION_API_KEY;
