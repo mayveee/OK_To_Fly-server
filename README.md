@@ -42,13 +42,4 @@
   "message2": "⚠️ 주의가 필요한 물품이 포함되어 있습니다"
 }
 ```
-### 스택
 
-| 분야               | 사용 기술 및 설명                                                |
-|--------------------|------------------------------------------------------------------|
-| **프레임워크**      | Express.js                    |
-| **서버 호스팅**     | Render                     |
-| **언어**            | JavaScript (Node.js)                                            |
-| **API 통신**        | Axios (서버 내부에서 Google Vision API 호출)                  |
-| **이미지 분석**     | Google Cloud Vision API (Label Detection + Object Detection)   |
-| **라우팅**          | `/test-vision` POST, `/` GET (헬스 체크용)                      |
